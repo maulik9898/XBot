@@ -8,7 +8,7 @@ const char *password = "9998328464Mm";
 
 WiFiUDP Udp;
 unsigned int localUdpPort = 4210;  // local port to listen on
-char incomingPacket[10];  // buffer for incoming packets
+char incomingPacket[100];  // buffer for incoming packets
 char replyPacket[] = "Hi there! Got the message :-)";  // a reply string to send back
 int t = 100;//turn delay
 int d = 150;// direction delay
@@ -33,7 +33,7 @@ void left() {
     digitalWrite(D4, HIGH);
     digitalWrite(D2, LOW);
     digitalWrite(D3, LOW);
-    Serial.println("FORWARD");
+    Serial.println("Left");
     // server.send(200, "text/plain", "FORWARD");
 }
 
@@ -52,7 +52,7 @@ void right() {
     digitalWrite(D3, HIGH);
     digitalWrite(D1, LOW);
     digitalWrite(D4, LOW);
-    Serial.println("BACK");
+    Serial.println("Right");
     // server.send(200, "text/plain", "BACK");
 }
 
@@ -61,7 +61,7 @@ void forward() {
     digitalWrite(D2, HIGH);
     digitalWrite(D3, LOW);
     digitalWrite(D4, HIGH);
-    Serial.println("RIGHT");
+    Serial.println("Forward");
 //  server.send(200, "text/plain", "RIGHT");
 }
 
@@ -70,7 +70,7 @@ void back() {
     digitalWrite(D2, LOW);
     digitalWrite(D3, HIGH);
     digitalWrite(D4, LOW);
-    Serial.println("LEFT");
+    Serial.println("Back");
     // server.send(200, "text/plain", "LEFT");
 }
 
@@ -151,27 +151,33 @@ void getData() {
                 delay(d);
                 stop();
                 break;
+            case 'V':
+                Serial.println("Verify");
+                Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+                Udp.print("C");
+                Udp.endPacket();
+                break;
             default:
                 break;
         }
-        incomingPacket[0] = ' ';
-         char tmp[10];
-         tmp[0]=incomingPacket[4];
-         tmp[1]=incomingPacket[5];
-         tmp[2]=incomingPacket[6];
-         incomingPacket[4]=' ';
+        /* incomingPacket[0] = ' ';
+          char tmp[10];
+          tmp[0]=incomingPacket[4];
+          tmp[1]=incomingPacket[5];
+          tmp[2]=incomingPacket[6];
+          incomingPacket[4]=' ';
 
-         incomingPacket[5]=' ';
-         incomingPacket[6]=' ';
+          incomingPacket[5]=' ';
+          incomingPacket[6]=' ';
 
-         String intt(tmp);
-         String ints(incomingPacket);
-         int d = ints.toInt();
-         int t=intt.toInt();
-        Serial.printf("d : %d   t : %d\n ", d, t);
-
+          String intt(tmp);
+          String ints(incomingPacket);
+          int d = ints.toInt();
+          int t=intt.toInt();
+         Serial.printf("d : %d   t : %d\n ", d, t);
+ */
         Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
-        Udp.print(replyPacket);
+        Udp.print("Confirm");
         Udp.endPacket();
     }
 }
